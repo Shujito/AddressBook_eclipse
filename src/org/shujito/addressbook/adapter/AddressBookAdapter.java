@@ -19,8 +19,8 @@ public class AddressBookAdapter extends BakedArrayAdapter<Contact>
 	{
 		ImageView avatar = null;
 		TextView nameLastName = null;
-		TextView phone = null;
 		TextView address = null;
+		TextView phone = null;
 		
 		public ViewHolder(Context context)
 		{
@@ -28,8 +28,8 @@ public class AddressBookAdapter extends BakedArrayAdapter<Contact>
 			LayoutInflater.from(context).inflate(R.layout.item_address_book, this);
 			this.avatar = (ImageView) this.findViewById(R.id.iv_avatar);
 			this.nameLastName = (TextView) this.findViewById(R.id.tv_name_lastname);
-			this.phone = (TextView) this.findViewById(R.id.tv_phone);
 			this.address = (TextView) this.findViewById(R.id.tv_address);
+			this.phone = (TextView) this.findViewById(R.id.tv_phone);
 		}
 	}
 	
@@ -60,8 +60,8 @@ public class AddressBookAdapter extends BakedArrayAdapter<Contact>
 		if (contact.lastname != null && contact.lastname.length() > 0)
 			fullName = fullName + " " + contact.lastname;
 		vh.nameLastName.setText(fullName);
-		vh.phone.setText(contact.phone);
 		vh.address.setText(contact.address);
+		vh.phone.setText(contact.phone);
 		return vh;
 	}
 }

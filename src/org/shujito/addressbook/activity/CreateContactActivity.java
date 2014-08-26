@@ -75,6 +75,9 @@ public class CreateContactActivity extends ActionBarActivity
 				this.setResult(RESULT_OK, intent);
 				this.finish();
 				return true;
+			case android.R.id.home:
+				this.finish();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

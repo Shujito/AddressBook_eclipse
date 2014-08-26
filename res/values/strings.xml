@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="app_name">Address Book</string>
+    <!-- MainActivity -->
+    <!-- MainActivity menu -->
+    <string name="menu_new">New</string>
+    <!-- CreateContactActivity -->
+    <string name="create_contact">Create Contact</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
+    <string name="notes">Notes</string>
+    <!-- CreateContactActivity menu -->
+    <string name="menu_done">Done</string>
+
+</resources>

@@ -1,6 +1,7 @@
 package org.shujito.addressbook.activity;
 
 import org.shujito.addressbook.R;
+import org.shujito.addressbook.model.Contact;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+/**
+ * Just UI and intents, no models used here. Used to create {@link Contact} data.
+ * @author shujito
+ *
+ */
 public class CreateContactActivity extends ActionBarActivity
 {
 	/* statics */

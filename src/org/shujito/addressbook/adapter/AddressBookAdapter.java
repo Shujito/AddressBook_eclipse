@@ -13,6 +13,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Adapter for the addressbook listing.
+ * @author shujito
+ *
+ */
 public class AddressBookAdapter extends BakedArrayAdapter<Contact>
 {
 	class ViewHolder extends FrameLayout

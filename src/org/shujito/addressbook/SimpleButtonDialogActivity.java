@@ -7,6 +7,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * An activity with a button that pops an alert dialog, nothing special.
+ * @author shujito
+ *
+ */
 public class SimpleButtonDialogActivity extends ActionBarActivity implements OnClickListener
 {
 	private Button mBtnHello = null;

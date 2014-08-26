@@ -15,7 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 /**
- * This is the first activity that launches
+ * This is the first activity that launches.
  * @author shujito
  */
 public class AddressBookActivity extends ActionBarActivity

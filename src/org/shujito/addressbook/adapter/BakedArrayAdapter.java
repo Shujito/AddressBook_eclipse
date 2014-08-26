@@ -7,6 +7,13 @@ import java.util.List;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+/**
+ * Prepared {@link ArrayAdapter} that leverages the implementation of common methods
+ * like add, remove, getCount, getItem ...
+ * @author shujito
+ *
+ * @param <T> Data type to be used for this {@link ArrayAdapter}
+ */
 public class BakedArrayAdapter<T> extends ArrayAdapter<T>
 {
 	protected List<T> objects = null;

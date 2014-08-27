@@ -7,33 +7,48 @@ import java.util.List;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
+
 /**
  * Prepared {@link ArrayAdapter} that leverages the implementation of common methods
  * like add, remove, getCount, getItem ...
+ * It also persists data!
  * @author shujito
  *
  * @param <T> Data type to be used for this {@link ArrayAdapter}
  */
-public abstract class BakedArrayAdapter<T> extends ArrayAdapter<T>
+public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 {
 	private List<T> objects = null;
+	private Class<T> class_ = null;
 	
-	protected BakedArrayAdapter(Context context, int resource, List<T> objects)
+	protected ModelArrayAdapter(Context context, int resource, Class<T> class_)
 	{
-		super(context, resource, objects);
-		this.objects = objects;
+		super(context, resource);
+		this.class_ = class_;
+		this.objects = new Select().from(this.class_).execute();
 	}
 	
 	@Override
 	public final void add(T object)
 	{
-		this.objects.add(object);
+		object.save();
 	}
 	
 	@Override
 	public final void addAll(Collection<? extends T> collection)
 	{
-		this.objects.addAll(collection);
+		@SuppressWarnings("unchecked")
+		T[] vt = (T[]) collection.toArray();
+		ActiveAndroid.beginTransaction();
+		for (T t : vt)
+		{
+			this.add(t);
+			ActiveAndroid.setTransactionSuccessful();
+		}
+		ActiveAndroid.endTransaction();
 	}
 	
 	@Override
@@ -45,7 +60,7 @@ public abstract class BakedArrayAdapter<T> extends ArrayAdapter<T>
 	@Override
 	public final void remove(T object)
 	{
-		this.objects.remove(object);
+		object.delete();
 	}
 	
 	@Override
@@ -68,5 +83,12 @@ public abstract class BakedArrayAdapter<T> extends ArrayAdapter<T>
 	public long getItemId(int position)
 	{
 		return -1;
+	}
+	
+	@Override
+	public void notifyDataSetChanged()
+	{
+		this.objects = new Select().from(this.class_).execute();
+		super.notifyDataSetChanged();
 	}
 }

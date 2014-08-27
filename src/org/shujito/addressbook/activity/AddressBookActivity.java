@@ -34,7 +34,7 @@ public class AddressBookActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		this.mListView = new ListView(this);
 		this.mListView.setOnItemClickListener(this);
-		this.mListView.setAdapter(AddressBookAdapter.create(this));
+		this.mListView.setAdapter(new AddressBookAdapter(this));
 		this.setContentView(this.mListView);
 	}
 	

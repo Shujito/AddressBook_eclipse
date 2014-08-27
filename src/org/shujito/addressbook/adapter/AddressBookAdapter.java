@@ -1,7 +1,5 @@
 package org.shujito.addressbook.adapter;
 
-import java.util.ArrayList;
-
 import org.shujito.addressbook.R;
 import org.shujito.addressbook.model.Contact;
 
@@ -18,7 +16,7 @@ import android.widget.TextView;
  * @author shujito
  *
  */
-public class AddressBookAdapter extends BakedArrayAdapter<Contact>
+public class AddressBookAdapter extends ModelArrayAdapter<Contact>
 {
 	class ViewHolder extends FrameLayout
 	{
@@ -38,14 +36,9 @@ public class AddressBookAdapter extends BakedArrayAdapter<Contact>
 		}
 	}
 	
-	public static AddressBookAdapter create(Context context)
+	public AddressBookAdapter(Context context)
 	{
-		return new AddressBookAdapter(context, new ArrayList<Contact>());
-	}
-	
-	private AddressBookAdapter(Context context, ArrayList<Contact> objects)
-	{
-		super(context, R.layout.item_address_book, objects);
+		super(context, R.layout.item_address_book, Contact.class);
 	}
 	
 	@Override

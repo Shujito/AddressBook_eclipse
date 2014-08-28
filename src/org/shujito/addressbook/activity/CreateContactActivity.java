@@ -19,12 +19,12 @@ import android.widget.ImageView;
 public class CreateContactActivity extends ActionBarActivity
 {
 	/* statics */
-	static final String RESULT_AVATAR = "avatar";
-	static final String RESULT_NAME = "name";
-	static final String RESULT_LAST_NAME = "lastname";
-	static final String RESULT_ADDRESS = "address";
-	static final String RESULT_PHONE = "phone";
-	static final String RESULT_NOTES = "notes";
+	public static final String RESULT_AVATAR = "avatar";
+	public static final String RESULT_NAME = "name";
+	public static final String RESULT_LAST_NAME = "lastname";
+	public static final String RESULT_ADDRESS = "address";
+	public static final String RESULT_PHONE = "phone";
+	public static final String RESULT_NOTES = "notes";
 	/* fields */
 	private EditText mEtName = null;
 	private ImageView mIvAvatar = null;

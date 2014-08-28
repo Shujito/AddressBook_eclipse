@@ -13,5 +13,7 @@
     <string name="notes">Notes</string>
     <!-- CreateContactActivity menu -->
     <string name="menu_done">Done</string>
+    <!-- ViewContactActivity -->
+    <string name="view_contact">View Contact</string>
 
 </resources>

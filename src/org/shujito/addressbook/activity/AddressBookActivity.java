@@ -83,8 +83,14 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	public void onItemClick(AdapterView<?> dad, View v, int pos, long id)
 	{
-		// TODO: launch an activity
+		AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
+		Contact contact = adapter.getItem(pos);
 		Intent intent = new Intent(this, ViewContactActivity.class);
+		intent.putExtra(ViewContactActivity.RESULT_NAME, contact.name);
+		intent.putExtra(ViewContactActivity.RESULT_LAST_NAME, contact.lastname);
+		intent.putExtra(ViewContactActivity.RESULT_ADDRESS, contact.address);
+		intent.putExtra(ViewContactActivity.RESULT_PHONE, contact.phone);
+		intent.putExtra(ViewContactActivity.RESULT_NOTES, contact.notes);
 		this.startActivity(intent);
 	}
 	

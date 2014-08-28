@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 /**
@@ -19,7 +20,7 @@ import android.widget.ListView;
  * @author shujito
  */
 public class AddressBookActivity extends ActionBarActivity
-	implements OnItemClickListener
+	implements OnItemClickListener, OnItemLongClickListener
 {
 	/* statics */
 	static final String TAG = AddressBookActivity.class.getSimpleName();
@@ -34,6 +35,7 @@ public class AddressBookActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		this.mListView = new ListView(this);
 		this.mListView.setOnItemClickListener(this);
+		this.mListView.setOnItemLongClickListener(this);
 		this.mListView.setAdapter(new AddressBookAdapter(this));
 		this.setContentView(this.mListView);
 	}
@@ -81,5 +83,14 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	public void onItemClick(AdapterView<?> dad, View v, int pos, long id)
 	{
+		// TODO: launch an activity
+		Intent intent = new Intent(this, ViewContactActivity.class);
+		this.startActivity(intent);
+	}
+	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> dad, View v, int pos, long id)
+	{
+		return true;
 	}
 }

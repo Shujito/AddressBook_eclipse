@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:contentDescription="@string/app_name"
+            android:src="@android:drawable/sym_def_app_icon" />
+
+        <!-- Name and last name -->
+
+        <TextView
+            style="@style/ListingHeader"
+            android:text="@string/name" />
+
+        <View style="@style/ListingSeparator" />
+
+        <TextView
+            android:id="@+id/tv_name_lastname"
+            style="@style/ListingField"
+            android:text="@string/name" />
+
+        <!-- Address -->
+
+        <TextView
+            style="@style/ListingHeader"
+            android:text="@string/address" />
+
+        <View style="@style/ListingSeparator" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            style="@style/ListingField"
+            android:text="@string/address" />
+
+        <!-- Phone -->
+
+        <TextView
+            style="@style/ListingHeader"
+            android:text="@string/phone" />
+
+        <View style="@style/ListingSeparator" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            style="@style/ListingField"
+            android:text="@string/phone" />
+
+        <!-- Notes -->
+
+        <TextView
+            style="@style/ListingHeader"
+            android:text="@string/notes" />
+
+        <View style="@style/ListingSeparator" />
+
+        <TextView
+            android:id="@+id/tv_notes"
+            style="@style/ListingField"
+            android:layout_height="match_parent"
+            android:minHeight="48dp"
+            android:text="@string/notes" />
+    </LinearLayout>
+
+</ScrollView>

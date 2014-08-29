@@ -82,7 +82,7 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	@Override
 	public long getItemId(int position)
 	{
-		if (this.objects != null)
+		if (this.objects != null && this.objects.size() > position)
 		{
 			Model model = this.objects.get(position);
 			if (model != null)

@@ -8,15 +8,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.From;
 
 /**
  * This is the first activity that launches.
@@ -48,7 +50,7 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		this.getMenuInflater().inflate(R.menu.main, menu);
+		this.getMenuInflater().inflate(R.menu.address_book, menu);
 		return true;
 	}
 	
@@ -125,6 +127,8 @@ public class AddressBookActivity extends ActionBarActivity
 	public boolean onCreateActionMode(ActionMode mode, Menu menu)
 	{
 		this.mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		MenuInflater menuInflater = mode.getMenuInflater();
+		menuInflater.inflate(R.menu.address_book_context, menu);
 		return true;
 	}
 	
@@ -137,30 +141,38 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	public boolean onActionItemClicked(ActionMode action, MenuItem item)
 	{
+		switch (item.getItemId())
+		{
+			case R.id.menu_delete:
+				AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
+				long[] ids = this.mListView.getCheckedItemIds();
+				From from = new Delete().from(Contact.class);
+				for (long id : ids)
+				{
+					from.or("id=?", id);
+				}
+				from.execute();
+				adapter.notifyDataSetChanged();
+				action.finish();
+				return true;
+		}
 		return false;
 	}
 	
 	@Override
 	public void onDestroyActionMode(ActionMode action)
 	{
-		this.deselectAll();
-		this.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-	}
-	
-	/* meth */
-	private void selectAll()
-	{
-		for (int idx = 0; idx < this.mListView.getAdapter().getCount(); idx++)
+		AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
+		adapter.notifyDataSetInvalidated();
+		this.mListView.clearChoices();
+		//this.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		this.mListView.post(new Runnable()
 		{
-			this.mListView.setItemChecked(idx, true);
-		}
-	}
-	
-	private void deselectAll()
-	{
-		for (int idx = 0; idx < this.mListView.getAdapter().getCount(); idx++)
-		{
-			this.mListView.setItemChecked(idx, false);
-		}
+			@Override
+			public void run()
+			{
+				mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+			}
+		});
 	}
 }

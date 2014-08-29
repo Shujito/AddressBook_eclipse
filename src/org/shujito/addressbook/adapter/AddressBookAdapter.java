@@ -57,6 +57,14 @@ public class AddressBookAdapter extends ModelArrayAdapter<Contact>
 		String fullName = contact.name;
 		if (contact.lastname != null && contact.lastname.length() > 0)
 			fullName = fullName + " " + contact.lastname;
+		if (contact.address == null || contact.address != null && contact.address.length() == 0)
+			vh.address.setVisibility(View.GONE);
+		else
+			vh.address.setVisibility(View.VISIBLE);
+		if (contact.phone == null || contact.phone != null && contact.phone.length() == 0)
+			vh.phone.setVisibility(View.GONE);
+		else
+			vh.phone.setVisibility(View.VISIBLE);
 		vh.nameLastName.setText(fullName);
 		vh.address.setText(contact.address);
 		vh.phone.setText(contact.phone);

@@ -7,6 +7,9 @@ import org.shujito.addressbook.model.Contact;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +23,14 @@ import android.widget.ListView;
  * @author shujito
  */
 public class AddressBookActivity extends ActionBarActivity
-	implements OnItemClickListener, OnItemLongClickListener
+	implements OnItemClickListener, OnItemLongClickListener, ActionMode.Callback
 {
 	/* statics */
 	static final String TAG = AddressBookActivity.class.getSimpleName();
 	static final int REQUEST_CODE_CREATE = 0x1000;
 	/* fields */
 	private ListView mListView = null;
+	private ActionMode mActionMode = null;
 	
 	/* lifecycle methods */
 	@Override
@@ -37,6 +41,7 @@ public class AddressBookActivity extends ActionBarActivity
 		this.mListView.setOnItemClickListener(this);
 		this.mListView.setOnItemLongClickListener(this);
 		this.mListView.setAdapter(new AddressBookAdapter(this));
+		this.mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
 		this.setContentView(this.mListView);
 	}
 	
@@ -81,22 +86,81 @@ public class AddressBookActivity extends ActionBarActivity
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> dad, View v, int pos, long id)
+	public void onItemClick(AdapterView<?> ada, View v, int pos, long id)
 	{
-		AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
-		Contact contact = adapter.getItem(pos);
-		Intent intent = new Intent(this, ViewContactActivity.class);
-		intent.putExtra(ViewContactActivity.RESULT_NAME, contact.name);
-		intent.putExtra(ViewContactActivity.RESULT_LAST_NAME, contact.lastname);
-		intent.putExtra(ViewContactActivity.RESULT_ADDRESS, contact.address);
-		intent.putExtra(ViewContactActivity.RESULT_PHONE, contact.phone);
-		intent.putExtra(ViewContactActivity.RESULT_NOTES, contact.notes);
-		this.startActivity(intent);
+		if (this.mListView.getChoiceMode() == ListView.CHOICE_MODE_NONE)
+		{
+			AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
+			Contact contact = adapter.getItem(pos);
+			Intent intent = new Intent(this, ViewContactActivity.class);
+			intent.putExtra(ViewContactActivity.RESULT_NAME, contact.name);
+			intent.putExtra(ViewContactActivity.RESULT_LAST_NAME, contact.lastname);
+			intent.putExtra(ViewContactActivity.RESULT_ADDRESS, contact.address);
+			intent.putExtra(ViewContactActivity.RESULT_PHONE, contact.phone);
+			intent.putExtra(ViewContactActivity.RESULT_NOTES, contact.notes);
+			this.startActivity(intent);
+		}
+		if (this.mListView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE)
+		{
+			long[] checkedIds = this.mListView.getCheckedItemIds();
+			if (checkedIds.length == 0)
+			{
+				this.mActionMode.finish();
+			}
+		}
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> dad, View v, int pos, long id)
 	{
+		if (this.mListView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE)
+			return false;
+		this.mActionMode = this.startSupportActionMode(this);
+		this.mListView.setItemChecked(pos, true);
 		return true;
+	}
+	
+	/* ActionMode.Callback */
+	@Override
+	public boolean onCreateActionMode(ActionMode mode, Menu menu)
+	{
+		this.mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareActionMode(ActionMode action, Menu menu)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean onActionItemClicked(ActionMode action, MenuItem item)
+	{
+		return false;
+	}
+	
+	@Override
+	public void onDestroyActionMode(ActionMode action)
+	{
+		this.deselectAll();
+		this.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+	}
+	
+	/* meth */
+	private void selectAll()
+	{
+		for (int idx = 0; idx < this.mListView.getAdapter().getCount(); idx++)
+		{
+			this.mListView.setItemChecked(idx, true);
+		}
+	}
+	
+	private void deselectAll()
+	{
+		for (int idx = 0; idx < this.mListView.getAdapter().getCount(); idx++)
+		{
+			this.mListView.setItemChecked(idx, false);
+		}
 	}
 }

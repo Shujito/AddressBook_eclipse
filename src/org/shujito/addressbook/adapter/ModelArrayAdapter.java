@@ -82,7 +82,21 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	@Override
 	public long getItemId(int position)
 	{
-		return -1;
+		if (this.objects != null)
+		{
+			Model model = this.objects.get(position);
+			if (model != null)
+			{
+				return model.getId();
+			}
+		}
+		return position;
+	}
+	
+	@Override
+	public boolean hasStableIds()
+	{
+		return true;
 	}
 	
 	@Override

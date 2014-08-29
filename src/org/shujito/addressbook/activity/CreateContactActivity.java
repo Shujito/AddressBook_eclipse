@@ -12,7 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 /**
- * Just UI and intents, no models used here. Used to create {@link Contact} data.
+ * Just UI and intents, no models used here. Used to create or edit
+ * {@link Contact} data.
  * @author shujito
  *
  */
@@ -37,6 +38,8 @@ public class CreateContactActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		this.getSupportActionBar().setHomeButtonEnabled(true);
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.setContentView(R.layout.activity_create_contact);
 		this.mEtName = (EditText) this.findViewById(R.id.et_name);
 		this.mIvAvatar = (ImageView) this.findViewById(R.id.iv_avatar);
@@ -44,8 +47,6 @@ public class CreateContactActivity extends ActionBarActivity
 		this.mEtAddress = (EditText) this.findViewById(R.id.et_address);
 		this.mEtPhone = (EditText) this.findViewById(R.id.et_phone);
 		this.mEtNotes = (EditText) this.findViewById(R.id.et_notes);
-		this.getSupportActionBar().setHomeButtonEnabled(true);
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override

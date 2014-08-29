@@ -4,6 +4,8 @@ import org.shujito.addressbook.R;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,8 @@ public class ViewContactActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_view_contact);
+		this.getSupportActionBar().setHomeButtonEnabled(true);
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		// ui's
 		this.mIvAvatar = (ImageView) this.findViewById(R.id.iv_avatar);
 		this.mTvNameLastname = (TextView) this.findViewById(R.id.tv_name_lastname);
@@ -37,13 +41,36 @@ public class ViewContactActivity extends ActionBarActivity
 		// put infos
 		String fullName = this.getIntent().getStringExtra(RESULT_NAME);
 		String lastName = this.getIntent().getStringExtra(RESULT_LAST_NAME);
+		String address = this.getIntent().getStringExtra(RESULT_ADDRESS);
+		String phone = this.getIntent().getStringExtra(RESULT_PHONE);
+		String notes = this.getIntent().getStringExtra(RESULT_NOTES);
 		if (lastName != null && lastName.length() > 0)
 		{
 			fullName = fullName + " " + lastName;
 		}
+		if (address == null || address != null && address.length() == 0)
+		{
+			this.mTvAddress.setVisibility(View.GONE);
+		}
+		if (notes == null || notes != null && notes.length() == 0)
+		{
+			this.mTvNotes.setVisibility(View.GONE);
+		}
 		this.mTvNameLastname.setText(fullName);
-		this.mTvAddress.setText(this.getIntent().getStringExtra(RESULT_ADDRESS));
-		this.mTvPhone.setText(this.getIntent().getStringExtra(RESULT_PHONE));
-		this.mTvNotes.setText(this.getIntent().getStringExtra(RESULT_NOTES));
+		this.mTvAddress.setText(address);
+		this.mTvPhone.setText(phone);
+		this.mTvNotes.setText(notes);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				this.finish();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

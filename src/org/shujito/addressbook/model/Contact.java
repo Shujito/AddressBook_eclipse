@@ -16,12 +16,12 @@ public class Contact extends Model implements Serializable
 {
 	/* statics */
 	private static final long serialVersionUID = 1L;
-	static final String TABLE_CONTACT = "contact";
-	static final String CONTACT_NAME = "name";
-	static final String CONTACT_LASTNAME = "lastname";
-	static final String CONTACT_ADDRESS = "address";
-	static final String CONTACT_PHONE = "phone";
-	static final String CONTACT_NOTES = "notes";
+	public static final String TABLE_CONTACT = "contact";
+	public static final String CONTACT_NAME = "name";
+	public static final String CONTACT_LASTNAME = "lastname";
+	public static final String CONTACT_ADDRESS = "address";
+	public static final String CONTACT_PHONE = "phone";
+	public static final String CONTACT_NOTES = "notes";
 	/* fields */
 	@Column(name = CONTACT_NAME)
 	public String name = null;

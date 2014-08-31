@@ -80,7 +80,7 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	}
 	
 	@Override
-	public long getItemId(int position)
+	public final long getItemId(int position)
 	{
 		if (this.objects != null && this.objects.size() > position)
 		{
@@ -94,15 +94,22 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	}
 	
 	@Override
-	public boolean hasStableIds()
+	public final boolean hasStableIds()
 	{
 		return this.objects != null;
 	}
 	
 	@Override
-	public void notifyDataSetChanged()
+	public final void notifyDataSetChanged()
 	{
-		this.objects = new Select().from(this.class_).execute();
+		this.objects = this.select();
 		super.notifyDataSetChanged();
+	}
+	
+	public List<T> select()
+	{
+		return new Select()
+			.from(this.class_)
+			.execute();
 	}
 }

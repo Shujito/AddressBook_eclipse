@@ -1,5 +1,7 @@
 package org.shujito.addressbook.adapter;
 
+import java.util.List;
+
 import org.shujito.addressbook.R;
 import org.shujito.addressbook.model.Contact;
 
@@ -10,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.activeandroid.query.Select;
 
 /**
  * Adapter for the addressbook listing.
@@ -69,5 +73,14 @@ public class AddressBookAdapter extends ModelArrayAdapter<Contact>
 		vh.address.setText(contact.address);
 		vh.phone.setText(contact.phone);
 		return vh;
+	}
+	
+	@Override
+	public List<Contact> select()
+	{
+		return new Select()
+			.from(Contact.class)
+			.orderBy(Contact.CONTACT_NAME + " ASC")
+			.execute();
 	}
 }

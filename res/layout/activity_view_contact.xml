@@ -17,57 +17,85 @@
 
         <!-- Name and last name -->
 
-        <TextView
-            style="@style/ListingHeader"
-            android:text="@string/name" />
+        <LinearLayout
+            android:id="@+id/ll_name_las_tname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <View style="@style/ListingSeparator" />
+            <TextView
+                style="@style/ListingHeader"
+                android:text="@string/name" />
 
-        <TextView
-            android:id="@+id/tv_name_lastname"
-            style="@style/ListingField"
-            android:text="@string/name" />
+            <View style="@style/ListingSeparator" />
+
+            <TextView
+                android:id="@+id/tv_name_lastname"
+                style="@style/ListingField"
+                android:text="@string/name" />
+        </LinearLayout>
 
         <!-- Address -->
 
-        <TextView
-            style="@style/ListingHeader"
-            android:text="@string/address" />
+        <LinearLayout
+            android:id="@+id/ll_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <View style="@style/ListingSeparator" />
+            <TextView
+                style="@style/ListingHeader"
+                android:text="@string/address" />
 
-        <TextView
-            android:id="@+id/tv_address"
-            style="@style/ListingField"
-            android:text="@string/address" />
+            <View style="@style/ListingSeparator" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                style="@style/ListingField"
+                android:text="@string/address" />
+        </LinearLayout>
 
         <!-- Phone -->
 
-        <TextView
-            style="@style/ListingHeader"
-            android:text="@string/phone" />
+        <LinearLayout
+            android:id="@+id/ll_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <View style="@style/ListingSeparator" />
+            <TextView
+                style="@style/ListingHeader"
+                android:text="@string/phone" />
 
-        <TextView
-            android:id="@+id/tv_phone"
-            style="@style/ListingField"
-            android:text="@string/phone" />
+            <View style="@style/ListingSeparator" />
+
+            <TextView
+                android:id="@+id/tv_phone"
+                style="@style/ListingField"
+                android:text="@string/phone" />
+        </LinearLayout>
 
         <!-- Notes -->
 
-        <TextView
-            style="@style/ListingHeader"
-            android:text="@string/notes" />
+        <LinearLayout
+            android:id="@+id/ll_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <View style="@style/ListingSeparator" />
+            <TextView
+                style="@style/ListingHeader"
+                android:text="@string/notes" />
 
-        <TextView
-            android:id="@+id/tv_notes"
-            style="@style/ListingField"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:text="@string/notes" />
+            <View style="@style/ListingSeparator" />
+
+            <TextView
+                android:id="@+id/tv_notes"
+                style="@style/ListingField"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:text="@string/notes" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

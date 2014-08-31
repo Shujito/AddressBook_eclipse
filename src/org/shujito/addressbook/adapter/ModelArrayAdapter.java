@@ -28,7 +28,7 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	{
 		super(context, resource);
 		this.class_ = class_;
-		this.objects = new Select().from(this.class_).execute();
+		this.objects = this.select();
 	}
 	
 	@Override

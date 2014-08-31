@@ -45,17 +45,11 @@ public class ViewContactActivity extends ActionBarActivity
 		String phone = this.getIntent().getStringExtra(RESULT_PHONE);
 		String notes = this.getIntent().getStringExtra(RESULT_NOTES);
 		if (lastName != null && lastName.length() > 0)
-		{
 			fullName = fullName + " " + lastName;
-		}
 		if (address == null || address != null && address.length() == 0)
-		{
-			this.mTvAddress.setVisibility(View.GONE);
-		}
+			this.findViewById(R.id.ll_address).setVisibility(View.GONE);
 		if (notes == null || notes != null && notes.length() == 0)
-		{
-			this.mTvNotes.setVisibility(View.GONE);
-		}
+			this.findViewById(R.id.ll_notes).setVisibility(View.GONE);
 		this.mTvNameLastname.setText(fullName);
 		this.mTvAddress.setText(address);
 		this.mTvPhone.setText(phone);

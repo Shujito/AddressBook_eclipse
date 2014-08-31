@@ -29,6 +29,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="org.shujito.addressbook.activity.EditContactActivity"
+            android:label="@string/edit_contact"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="org.shujito.addressbook.activity.ViewContactActivity"
             android:label="@string/view_contact"
             android:screenOrientation="portrait" >

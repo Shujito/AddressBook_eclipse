@@ -4,10 +4,13 @@ import org.shujito.addressbook.R;
 import org.shujito.addressbook.adapter.AddressBookAdapter;
 import org.shujito.addressbook.model.Contact;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,11 +28,17 @@ import com.activeandroid.query.From;
  * @author shujito
  */
 public class AddressBookActivity extends ActionBarActivity
-	implements OnItemClickListener, OnItemLongClickListener, ActionMode.Callback
+	implements
+	OnItemClickListener,
+	OnItemLongClickListener,
+	// TODO: isolate
+	ActionMode.Callback
 {
 	/* statics */
 	static final String TAG = AddressBookActivity.class.getSimpleName();
+	static final String EXTRA_CONTACT_ID = "contact";
 	static final int REQUEST_CODE_CREATE = 0x1000;
+	static final int REQUEST_CODE_EDIT = 0x2000;
 	/* fields */
 	private ListView mListView = null;
 	private ActionMode mActionMode = null;
@@ -70,11 +79,22 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == REQUEST_CODE_CREATE)
+		if (resultCode == RESULT_OK)
 		{
-			if (resultCode == RESULT_OK)
+			Contact contact = null;
+			if (requestCode == REQUEST_CODE_CREATE)
 			{
-				Contact contact = new Contact();
+				contact = new Contact();
+				Log.i(TAG, "creating contact:" + contact.getId());
+			}
+			if (requestCode == REQUEST_CODE_EDIT)
+			{
+				long contactId = data.getLongExtra(EXTRA_CONTACT_ID, -1);
+				contact = Contact.load(Contact.class, contactId);
+				Log.i(TAG, "editing contact:" + contact.getId());
+			}
+			if (contact != null)
+			{
 				contact.name = data.getStringExtra(CreateContactActivity.RESULT_NAME);
 				contact.lastname = data.getStringExtra(CreateContactActivity.RESULT_LAST_NAME);
 				contact.address = data.getStringExtra(CreateContactActivity.RESULT_ADDRESS);
@@ -94,17 +114,14 @@ public class AddressBookActivity extends ActionBarActivity
 		{
 			AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
 			Contact contact = adapter.getItem(pos);
-			Intent intent = new Intent(this, ViewContactActivity.class);
-			intent.putExtra(ViewContactActivity.RESULT_NAME, contact.name);
-			intent.putExtra(ViewContactActivity.RESULT_LAST_NAME, contact.lastname);
-			intent.putExtra(ViewContactActivity.RESULT_ADDRESS, contact.address);
-			intent.putExtra(ViewContactActivity.RESULT_PHONE, contact.phone);
-			intent.putExtra(ViewContactActivity.RESULT_NOTES, contact.notes);
+			Intent intent = this.buildIntent(ViewContactActivity.class, contact);
+			Log.i(TAG, "viewing contact:" + contact.getId());
 			this.startActivity(intent);
 		}
 		if (this.mListView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE)
 		{
 			long[] checkedIds = this.mListView.getCheckedItemIds();
+			mActionMode.invalidate();
 			if (checkedIds.length == 0)
 			{
 				this.mActionMode.finish();
@@ -135,26 +152,59 @@ public class AddressBookActivity extends ActionBarActivity
 	@Override
 	public boolean onPrepareActionMode(ActionMode action, Menu menu)
 	{
+		long[] ids = this.mListView.getCheckedItemIds();
+		menu.findItem(R.id.menu_edit).setVisible(ids.length <= 1);
 		return false;
 	}
 	
 	@Override
-	public boolean onActionItemClicked(ActionMode action, MenuItem item)
+	public boolean onActionItemClicked(final ActionMode action, MenuItem item)
 	{
 		switch (item.getItemId())
 		{
 			case R.id.menu_delete:
-				AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
+			{
+				new AlertDialog.Builder(this)
+					.setTitle(R.string.app_name)
+					.setMessage(R.string.confirm_delete)
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+					{
+						AddressBookActivity $this = AddressBookActivity.this;
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							AddressBookAdapter adapter = (AddressBookAdapter) $this.mListView.getAdapter();
+							long[] ids = $this.mListView.getCheckedItemIds();
+							From from = new Delete().from(Contact.class);
+							for (long id : ids)
+							{
+								// XXX: Isolate?
+								from.or("id = ?", id);
+							}
+							from.execute();
+							adapter.notifyDataSetChanged();
+							action.finish();
+						}
+					})
+					.setNegativeButton(android.R.string.no, null)
+					.show();
+				return true;
+			}
+			case R.id.menu_edit:
+			{
 				long[] ids = this.mListView.getCheckedItemIds();
-				From from = new Delete().from(Contact.class);
-				for (long id : ids)
-				{
-					from.or("id=?", id);
-				}
-				from.execute();
-				adapter.notifyDataSetChanged();
+				// should have only one, but just in case...
+				if (ids.length > 1)
+					return true;
+				Contact contact = Contact.load(Contact.class, ids[0]);
+				Intent intent = this.buildIntent(EditContactActivity.class, contact);
+				intent.putExtra(EXTRA_CONTACT_ID, contact.getId());
+				this.startActivityForResult(intent, REQUEST_CODE_EDIT);
+				Log.i(TAG, "viewing contact:" + contact.getId());
 				action.finish();
 				return true;
+			}
 		}
 		return false;
 	}
@@ -165,7 +215,6 @@ public class AddressBookActivity extends ActionBarActivity
 		AddressBookAdapter adapter = (AddressBookAdapter) this.mListView.getAdapter();
 		adapter.notifyDataSetInvalidated();
 		this.mListView.clearChoices();
-		//this.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		this.mListView.post(new Runnable()
 		{
 			@Override
@@ -174,5 +223,16 @@ public class AddressBookActivity extends ActionBarActivity
 				mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
 			}
 		});
+	}
+	
+	Intent buildIntent(Class<?> type, Contact contact)
+	{
+		Intent intent = new Intent(this, type);
+		intent.putExtra(ViewContactActivity.RESULT_NAME, contact.name);
+		intent.putExtra(ViewContactActivity.RESULT_LAST_NAME, contact.lastname);
+		intent.putExtra(ViewContactActivity.RESULT_ADDRESS, contact.address);
+		intent.putExtra(ViewContactActivity.RESULT_PHONE, contact.phone);
+		intent.putExtra(ViewContactActivity.RESULT_NOTES, contact.notes);
+		return intent;
 	}
 }

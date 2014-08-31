@@ -27,12 +27,12 @@ public class CreateContactActivity extends ActionBarActivity
 	public static final String RESULT_PHONE = "phone";
 	public static final String RESULT_NOTES = "notes";
 	/* fields */
-	private EditText mEtName = null;
-	private ImageView mIvAvatar = null;
-	private EditText mEtLastName = null;
-	private EditText mEtAddress = null;
-	private EditText mEtPhone = null;
-	private EditText mEtNotes = null;
+	protected EditText mEtName = null;
+	protected ImageView mIvAvatar = null;
+	protected EditText mEtLastName = null;
+	protected EditText mEtAddress = null;
+	protected EditText mEtPhone = null;
+	protected EditText mEtNotes = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -73,7 +73,7 @@ public class CreateContactActivity extends ActionBarActivity
 						this.mEtPhone.setError("Required field");
 					return true;
 				}
-				Intent intent = new Intent();
+				Intent intent = new Intent(this.getIntent());
 				intent.putExtra(RESULT_NAME, this.mEtName.getText().toString());
 				intent.putExtra(RESULT_LAST_NAME, this.mEtLastName.getText().toString());
 				intent.putExtra(RESULT_ADDRESS, this.mEtAddress.getText().toString());

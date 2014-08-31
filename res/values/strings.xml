@@ -2,12 +2,15 @@
 
     <!-- AddressBookActivity -->
     <string name="app_name">Address Book</string>
+    <string name="confirm_delete">Are you sure you want to delete the selected contacts?</string>
     <!-- AddressBookActivity menu -->
     <string name="menu_new">New</string>
     <!-- AddressBookActivity context menu -->
     <string name="menu_delete">Delete</string>
+    <string name="menu_edit">Edit</string>
     <!-- CreateContactActivity -->
     <string name="create_contact">Create Contact</string>
+    <string name="edit_contact">Edit Contact</string>
     <string name="name">Name</string>
     <string name="last_name">Last Name</string>
     <string name="address">Address</string>

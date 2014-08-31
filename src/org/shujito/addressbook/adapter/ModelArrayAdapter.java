@@ -96,7 +96,7 @@ public abstract class ModelArrayAdapter<T extends Model> extends ArrayAdapter<T>
 	@Override
 	public boolean hasStableIds()
 	{
-		return true;
+		return this.objects != null;
 	}
 	
 	@Override

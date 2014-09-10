@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Column.ConflictAction;
 import com.activeandroid.annotation.Table;
 
 /**
@@ -25,15 +24,15 @@ public class Contact extends Model implements Serializable
 	public static final String CONTACT_PHONE = "phone";
 	public static final String CONTACT_NOTES = "notes";
 	/* fields */
-	@Column(name = CONTACT_ID, unique = true, onUniqueConflict = ConflictAction.REPLACE)
+	@Column(name = CONTACT_ID, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	public String id = null;
-	@Column(name = CONTACT_NAME, notNull = true)
+	@Column(name = CONTACT_NAME, notNull = true, onNullConflict = Column.ConflictAction.IGNORE)
 	public String name = null;
 	@Column(name = CONTACT_LASTNAME)
 	public String lastname = null;
 	@Column(name = CONTACT_ADDRESS)
 	public String address = null;
-	@Column(name = CONTACT_PHONE, notNull = true)
+	@Column(name = CONTACT_PHONE, notNull = true, onNullConflict = Column.ConflictAction.IGNORE)
 	public String phone = null;
 	@Column(name = CONTACT_NOTES)
 	public String notes = null;

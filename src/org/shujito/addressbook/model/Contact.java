@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * A simple {@link Contact} model.
@@ -15,6 +16,9 @@ import com.activeandroid.annotation.Table;
 public class Contact extends Model implements Serializable
 {
 	/* statics */
+	public static final TypeToken<Contact> typeToken = new TypeToken<Contact>()
+	{
+	};
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_CONTACT = "contact";
 	public static final String CONTACT_ID = "_id";

@@ -22,6 +22,7 @@
         android:theme="@style/Theme.AppCompat" >
 
         <!-- Activities -->
+
         <activity
             android:name="org.shujito.addressbook.activity.AddressBookActivity"
             android:screenOrientation="portrait" >
@@ -50,7 +51,13 @@
             android:name="org.shujito.addressbook.SimpleButtonDialogActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="org.shujito.addressbook.activity.AddressBookLoginAuthenticatorActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- Services -->
+
         <service
             android:name="org.shujito.addressbook.sync.AuthenticatorService"
             android:exported="false" >
@@ -73,7 +80,9 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
+
         <!-- Provider -->
+
         <provider
             android:name="org.shujito.addressbook.sync.ContactsProvider"
             android:authorities="org.shujito.addressbook.contacts"

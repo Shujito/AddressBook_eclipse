@@ -1,18 +1,25 @@
 package org.shujito.addressbook.sync;
 
+import org.shujito.addressbook.activity.AddressBookLoginAuthenticatorActivity;
+
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 public class Authenticator extends AbstractAccountAuthenticator
 {
+	private Context mContext = null;
+	
 	public Authenticator(Context context)
 	{
 		super(context);
+		this.mContext = context;
 	}
 	
 	public static final String TAG = Authenticator.class.getSimpleName();
@@ -21,7 +28,11 @@ public class Authenticator extends AbstractAccountAuthenticator
 	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException
 	{
 		Log.i(TAG, "addAccount");
-		return null;
+		Intent intent = new Intent(this.mContext, AddressBookLoginAuthenticatorActivity.class);
+		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+		return bundle;
 	}
 	
 	@Override

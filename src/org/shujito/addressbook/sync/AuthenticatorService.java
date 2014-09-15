@@ -3,6 +3,7 @@ package org.shujito.addressbook.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class AuthenticatorService extends Service
 {
@@ -19,6 +20,7 @@ public class AuthenticatorService extends Service
 	@Override
 	public IBinder onBind(Intent intent)
 	{
+		Log.i(TAG, "onBind");
 		return this.mAuthenticator.getIBinder();
 	}
 }

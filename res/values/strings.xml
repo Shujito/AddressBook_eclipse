@@ -20,5 +20,9 @@
     <string name="menu_done">Done</string>
     <!-- ViewContactActivity -->
     <string name="view_contact">View Contact</string>
+    <!-- AddressBookLoginAuthenticatorActivity -->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
 
 </resources>

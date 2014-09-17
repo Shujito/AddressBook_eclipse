@@ -1,6 +1,7 @@
 package org.shujito.addressbook.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -16,7 +17,7 @@ import com.google.gson.reflect.TypeToken;
 public class Contact extends Model implements Serializable
 {
 	/* statics */
-	public static final TypeToken<Contact> typeToken = new TypeToken<Contact>()
+	public static final TypeToken<List<Contact>> listType = new TypeToken<List<Contact>>()
 	{
 	};
 	private static final long serialVersionUID = 1L;

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.activeandroid.util.Log;
 import com.google.gson.Gson;
@@ -24,8 +25,8 @@ public class AddressBookApiController
 {
 	public static final String TAG = AddressBookApiController.class.getSimpleName();
 	public static final int STATUS_NONE = 0;
-	public static final int STATUS_NO_USERNAME = 1;
-	public static final int STATUS_NO_PASSWORD = 2;
+	public static final int STATUS_NO_USERNAME = 0x10;
+	public static final int STATUS_NO_PASSWORD = 0x20;
 	
 	public static class LoginException extends Exception
 	{
@@ -90,11 +91,11 @@ public class AddressBookApiController
 	 */
 	public Session login(String username, String password) throws LoginException, ServerException
 	{
-		if (username == null && password == null)
+		if (TextUtils.isEmpty(username) && TextUtils.isEmpty(password))
 			throw new LoginException("Username and password required");
-		if (username == null)
+		if (TextUtils.isEmpty(username))
 			throw new LoginException("Username required");
-		if (password == null)
+		if (TextUtils.isEmpty(password))
 			throw new LoginException("Password required");
 		Response<JsonObject> response = null;
 		try
@@ -132,11 +133,11 @@ public class AddressBookApiController
 	 */
 	public Result login(String username, String password, final LoginCallback callback)
 	{
-		if (username == null && password == null)
+		if (TextUtils.isEmpty(username) && TextUtils.isEmpty(password))
 			return new Result().setStatus(STATUS_NO_USERNAME | STATUS_NO_PASSWORD).setMessage("Username and password required");
-		if (username == null)
+		if (TextUtils.isEmpty(username))
 			return new Result().setStatus(STATUS_NO_USERNAME).setMessage("Username required");
-		if (password == null)
+		if (TextUtils.isEmpty(password))
 			return new Result().setStatus(STATUS_NO_PASSWORD).setMessage("Password required");
 		if (callback != null)
 		{
@@ -249,7 +250,7 @@ public class AddressBookApiController
 		{
 			Response<List<Contact>> response = Ion.with(this.mContext)
 				.load(this.buildContactsUrl())
-				.setHeader("cookie", "sid=" + session.id)
+				.setHeader("cookie", session.id == null ? "" : "sid=" + session.id)
 				.as(Contact.listType)
 				.withResponse()
 				.get();

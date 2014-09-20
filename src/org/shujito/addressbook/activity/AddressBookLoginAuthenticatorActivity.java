@@ -1,22 +1,28 @@
 package org.shujito.addressbook.activity;
 
 import org.shujito.addressbook.R;
+import org.shujito.addressbook.controller.AddressBookApiController;
+import org.shujito.addressbook.controller.AddressBookApiController.LoginCallback;
+import org.shujito.addressbook.model.Result;
+import org.shujito.addressbook.model.Session;
 
 import android.accounts.AccountAuthenticatorActivity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class AddressBookLoginAuthenticatorActivity extends AccountAuthenticatorActivity
-	implements OnClickListener
+	implements OnClickListener, LoginCallback
 {
 	public static final String TAG = AddressBookLoginAuthenticatorActivity.class.getSimpleName();
 	private EditText mEtUsername = null;
 	private EditText mEtPassword = null;
 	private Button mBtnLogin = null;
+	private ProgressDialog mPdLoggingIn = null;
 	
 	@Override
 	protected void onCreate(Bundle icicle)
@@ -27,16 +33,60 @@ public class AddressBookLoginAuthenticatorActivity extends AccountAuthenticatorA
 		this.mEtPassword = (EditText) this.findViewById(R.id.et_password);
 		this.mBtnLogin = (Button) this.findViewById(R.id.btn_login);
 		this.mBtnLogin.setOnClickListener(this);
+		this.mPdLoggingIn = new ProgressDialog(this);
+		this.mPdLoggingIn.setTitle(R.string.app_name);
+		this.mPdLoggingIn.setMessage(this.getString(R.string.logging_in));
+		this.mPdLoggingIn.setCancelable(false);
+		this.mPdLoggingIn.setCanceledOnTouchOutside(false);
+		this.mPdLoggingIn.setIndeterminate(true);
 	}
 	
 	@Override
 	public void onClick(View v)
 	{
+		String username = this.mEtUsername.getText().toString();
+		String password = this.mEtPassword.getText().toString();
+		Result result = new AddressBookApiController(this)
+			.login(username, password, this);
+		if (result != null && result.message != null)
+		{
+			if (result.status == AddressBookApiController.STATUS_NO_USERNAME)
+			{
+				this.mEtUsername.setError(result.message);
+				this.mEtUsername.requestFocus();
+			}
+			else if (result.status == AddressBookApiController.STATUS_NO_PASSWORD)
+			{
+				this.mEtPassword.setError(result.message);
+				this.mEtPassword.requestFocus();
+			}
+			else if (result.status == (AddressBookApiController.STATUS_NO_USERNAME | AddressBookApiController.STATUS_NO_PASSWORD))
+			{
+				this.mEtUsername.setError(result.message);
+				this.mEtPassword.setError(result.message);
+			}
+			return;
+		}
+		this.mPdLoggingIn.show();
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public void onLoginFailure(AddressBookApiController controller, Result result)
 	{
-		return true;
+		this.mPdLoggingIn.dismiss();
+		new AlertDialog.Builder(this)
+			.setTitle(R.string.app_name)
+			.setMessage(result.message)
+			.setPositiveButton(android.R.string.ok, null)
+			.show();
+	}
+	
+	@Override
+	public void onLoginSuccess(AddressBookApiController controller, Session login)
+	{
+		this.mPdLoggingIn.dismiss();
+		// TODO: code this part
+		this.setAccountAuthenticatorResult(null);
+		this.finish();
 	}
 }

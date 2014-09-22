@@ -2,6 +2,8 @@ package org.shujito.addressbook.controller;
 
 import java.util.List;
 
+import org.shujito.addressbook.controller.exception.LoginException;
+import org.shujito.addressbook.controller.exception.ServerException;
 import org.shujito.addressbook.model.Contact;
 import org.shujito.addressbook.model.Result;
 import org.shujito.addressbook.model.Session;
@@ -27,26 +29,6 @@ public class AddressBookApiController
 	public static final int STATUS_NONE = 0;
 	public static final int STATUS_NO_USERNAME = 0x10;
 	public static final int STATUS_NO_PASSWORD = 0x20;
-	
-	public static class LoginException extends Exception
-	{
-		private static final long serialVersionUID = 1L;
-		
-		public LoginException(String message)
-		{
-			super(message);
-		}
-	}
-	
-	public static class ServerException extends Exception
-	{
-		private static final long serialVersionUID = 1L;
-		
-		public ServerException(String message)
-		{
-			super(message);
-		}
-	}
 	
 	public static class ControllerFragment extends Fragment
 	{
@@ -84,10 +66,11 @@ public class AddressBookApiController
 	
 	/**
 	 * Logs a user in
-	 * @param username to be used to login
-	 * @param password to be used to login
-	 * @return 
-	 * @throws LoginException
+	 * @param username to be used to log in
+	 * @param password to be used to log in
+	 * @return the {@link Session} state
+	 * @throws LoginException when the username or password is empty or null
+	 * @throws ServerException when there is a problem on the server
 	 */
 	public Session login(String username, String password) throws LoginException, ServerException
 	{
@@ -215,6 +198,10 @@ public class AddressBookApiController
 			.withResponse();
 	}
 	
+	/**
+	 * Get the users from the addressbook server
+	 * @return a {@link List} of registered {@link User}s
+	 */
 	public List<User> getUsers()
 	{
 		try
@@ -243,9 +230,13 @@ public class AddressBookApiController
 			.toString();
 	}
 	
+	/**
+	 * Get contacts from a session state
+	 * @param session state to be used to fetch users from
+	 * @return a {@link List} of {@link Contact}s
+	 */
 	public List<Contact> getContacts(Session session)
 	{
-		Ion.getDefault(this.mContext).getCookieMiddleware().clear();
 		try
 		{
 			Response<List<Contact>> response = Ion.with(this.mContext)
@@ -264,6 +255,7 @@ public class AddressBookApiController
 	
 	private String buildContactsUrl()
 	{
+		Ion.getDefault(this.mContext).getCookieMiddleware().clear();
 		String host = Uri.encode(this.mHost, ":");
 		return new Uri.Builder()
 			.scheme("http")
@@ -271,5 +263,10 @@ public class AddressBookApiController
 			.appendPath(this.mContactsPath)
 			.build()
 			.toString();
+	}
+	
+	public Contact uploadContact(Session session, Contact contact) throws ServerException
+	{
+		return null;
 	}
 }

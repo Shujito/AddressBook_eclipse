@@ -14,8 +14,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.activeandroid.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -99,7 +99,8 @@ public class AddressBookApiController
 			else
 			{
 				Result result = this.mGson.fromJson(jobj, Result.class);
-				throw new ServerException(result.message);
+				throw new ServerException(result.message)
+					.setStatusCode(result.status);
 			}
 		}
 		// XXX: strange case
@@ -253,6 +254,43 @@ public class AddressBookApiController
 		}
 	}
 	
+	public Contact uploadContact(Session session, Contact contact) throws ServerException
+	{
+		Response<JsonObject> response = null;
+		try
+		{
+			response = Ion.with(this.mContext)
+				.load(this.buildContactsUrl())
+				.setJsonPojoBody(contact)
+				.asJsonObject()
+				.withResponse()
+				.get();
+		}
+		catch (Exception ex)
+		{
+			throw new ServerException(ex.getMessage());
+		}
+		if (response != null && response.getResult() != null)
+		{
+			JsonObject jobj = response.getResult();
+			if (response.getHeaders().getResponseCode() == 200)
+			{
+				return this.mGson.fromJson(jobj, Contact.class);
+			}
+			else
+			{
+				Result result = this.mGson.fromJson(jobj, Result.class);
+				ServerException exception = new ServerException(result.message)
+					.setStatusCode(result.status)
+					.putError(Contact.CONTACT_NAME, null)
+					.putError(Contact.CONTACT_PHONE, null);
+				throw exception;
+			}
+		}
+		// XXX: strange case
+		throw new ServerException(response.getException().getMessage());
+	}
+	
 	private String buildContactsUrl()
 	{
 		Ion.getDefault(this.mContext).getCookieMiddleware().clear();
@@ -263,10 +301,5 @@ public class AddressBookApiController
 			.appendPath(this.mContactsPath)
 			.build()
 			.toString();
-	}
-	
-	public Contact uploadContact(Session session, Contact contact) throws ServerException
-	{
-		return null;
 	}
 }

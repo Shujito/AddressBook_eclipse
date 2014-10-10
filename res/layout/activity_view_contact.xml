@@ -92,8 +92,7 @@
             <TextView
                 android:id="@+id/tv_notes"
                 style="@style/ListingField"
-                android:layout_height="match_parent"
-                android:minHeight="48dp"
+                android:layout_height="wrap_content"
                 android:text="@string/notes" />
         </LinearLayout>
     </LinearLayout>

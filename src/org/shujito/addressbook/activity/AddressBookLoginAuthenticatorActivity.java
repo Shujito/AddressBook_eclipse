@@ -6,9 +6,13 @@ import org.shujito.addressbook.controller.AddressBookApiController.LoginCallback
 import org.shujito.addressbook.model.Result;
 import org.shujito.addressbook.model.Session;
 
+import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +23,9 @@ public class AddressBookLoginAuthenticatorActivity extends AccountAuthenticatorA
 	implements OnClickListener, LoginCallback
 {
 	public static final String TAG = AddressBookLoginAuthenticatorActivity.class.getSimpleName();
+	public static final String EXTRA_ACCOUNT_TYPE = "account type";
+	public static final String EXTRA_AUTH_TOKEN_TYPE = "auth token type";
+	public static final String PARAM_USER_PASS = "user password";
 	private EditText mEtUsername = null;
 	private EditText mEtPassword = null;
 	private Button mBtnLogin = null;
@@ -46,8 +53,7 @@ public class AddressBookLoginAuthenticatorActivity extends AccountAuthenticatorA
 	{
 		String username = this.mEtUsername.getText().toString();
 		String password = this.mEtPassword.getText().toString();
-		Result result = new AddressBookApiController(this)
-			.login(username, password, this);
+		Result result = new AddressBookApiController(this).login(username, password, this);
 		if (result != null && result.message != null)
 		{
 			if (result.status == AddressBookApiController.STATUS_NO_USERNAME)
@@ -85,8 +91,21 @@ public class AddressBookLoginAuthenticatorActivity extends AccountAuthenticatorA
 	public void onLoginSuccess(AddressBookApiController controller, Session login)
 	{
 		this.mPdLoggingIn.dismiss();
-		// TODO: code this part
-		this.setAccountAuthenticatorResult(null);
+		String username = this.mEtUsername.getText().toString();
+		String password = this.mEtPassword.getText().toString();
+		String authToken = login.id;
+		String accountType = this.getPackageName();
+		Intent intent = new Intent();
+		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
+		intent.putExtra(PARAM_USER_PASS, password);
+		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+		intent.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
+		Account account = new Account(username, accountType);
+		AccountManager accountManager = AccountManager.get(this);
+		accountManager.addAccountExplicitly(account, password, null);
+		accountManager.setAuthToken(account, accountType, authToken);
+		this.setAccountAuthenticatorResult(intent.getExtras());
+		this.setResult(Activity.RESULT_OK);
 		this.finish();
 	}
 }

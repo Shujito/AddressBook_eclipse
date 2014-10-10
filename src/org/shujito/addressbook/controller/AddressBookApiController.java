@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
@@ -54,7 +55,7 @@ public class AddressBookApiController
 	}
 	
 	private Context mContext = null;
-	private Gson mGson = new Gson();
+	private Gson mGson = null;
 	private String mHost = "10.0.2.2:2403";
 	private String mUsersPath = "users";
 	private String mContactsPath = "contacts";
@@ -62,6 +63,7 @@ public class AddressBookApiController
 	public AddressBookApiController(Context context)
 	{
 		this.mContext = context;
+		this.mGson = Ion.getDefault(context).configure().getGson();
 	}
 	
 	/**
@@ -261,6 +263,7 @@ public class AddressBookApiController
 		{
 			response = Ion.with(this.mContext)
 				.load(this.buildContactsUrl())
+				.setHeader("cookie", session.id == null ? "" : "sid=" + session.id)
 				.setJsonPojoBody(contact)
 				.asJsonObject()
 				.withResponse()
@@ -280,10 +283,18 @@ public class AddressBookApiController
 			else
 			{
 				Result result = this.mGson.fromJson(jobj, Result.class);
-				ServerException exception = new ServerException(result.message)
-					.setStatusCode(result.status)
-					.putError(Contact.CONTACT_NAME, null)
-					.putError(Contact.CONTACT_PHONE, null);
+				JsonElement jsonErrors = jobj.get("errors");
+				// error fields placeholder
+				Contact fieldErrors = this.mGson.fromJson(jsonErrors, Contact.class);
+				ServerException exception = new ServerException(result.message);
+				exception.setStatusCode(result.status);
+				if (fieldErrors != null)
+				{
+					if (fieldErrors.name != null)
+						exception.putError(Contact.CONTACT_NAME, fieldErrors.name);
+					if (fieldErrors.phone != null)
+						exception.putError(Contact.CONTACT_PHONE, fieldErrors.phone);
+				}
 				throw exception;
 			}
 		}

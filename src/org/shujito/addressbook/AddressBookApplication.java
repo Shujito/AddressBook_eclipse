@@ -29,13 +29,14 @@ public class AddressBookApplication extends Application
 			.setDatabaseVersion(1)
 			.create();
 		ActiveAndroid.initialize(configuration);
-		ExcludeFieldsWithoutSerializedName sfwosn = new ExcludeFieldsWithoutSerializedName();
-		Ion ion = Ion.getDefault(this);
-		ion.configure().setGson(new GsonBuilder()
-			.addSerializationExclusionStrategy(sfwosn)
-			.addDeserializationExclusionStrategy(sfwosn)
-			.serializeNulls()
-			.create());
+		ExcludeFieldsWithoutSerializedName efwosn = new ExcludeFieldsWithoutSerializedName();
+		Ion.getDefault(this)
+			.configure()
+			.setGson(new GsonBuilder()
+				.addSerializationExclusionStrategy(efwosn)
+				.addDeserializationExclusionStrategy(efwosn)
+				.serializeNulls()
+				.create());
 	}
 	
 	@Override
